@@ -161,7 +161,6 @@ function animateSkills() {
     });
 }
 
-// Reset skill bar widths to 0 initially
 skillBars.forEach(bar => {
     bar.style.width = '0';
 });
