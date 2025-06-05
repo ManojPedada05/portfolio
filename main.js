@@ -16,12 +16,12 @@ function injectNotificationStyles() {
         .notification {
             position: fixed;
             bottom: 20px;
-            right: -300px; /* Start off-screen */
-            background-color: #FBBF24; /* Yellow for success */
-            color: #121A2D; /* Dark text */
+            right: -300px;
+            background-color: #FBBF24;
+            color: #121A2D;
             padding: 15px 20px;
             border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 5px rgba(0, 0, 0,0.2);
             z-index: 1000;
             font-family: 'Inter', sans-serif;
             font-size: 16px;
@@ -29,11 +29,11 @@ function injectNotificationStyles() {
             transition: right 0.5s ease-in-out;
         }
         .notification.error {
-            background-color: #f44336; /* Red for error */
-            color: #FFFFFF; /* White text */
+            background-color: #f44336;
+            color: #FFFFFF;
         }
         .notification.show {
-            right: 20px; /* Slide in */
+            right: 20px;
         }
     `;
     document.head.appendChild(style);
@@ -46,18 +46,16 @@ function showNotification(message, isError = false) {
     notification.textContent = message;
     document.body.appendChild(notification);
 
-    // Trigger slide-in animation
     setTimeout(() => {
         notification.classList.add('show');
-    }, 10); // Small delay to ensure transition works
+    }, 10);
 
-    // Remove after 4 seconds
     setTimeout(() => {
         notification.classList.remove('show');
         setTimeout(() => {
             notification.remove();
-        }, 500); // Wait for slide-out animation to complete
-    }, 4000); // Visible for 4 seconds
+        }, 500);
+    }, 4000);
 }
 
 // Run once to inject styles
@@ -70,19 +68,34 @@ const navToggle = document.querySelector('.nav__toggle');
 const navClose = document.querySelector('.nav__close');
 const navLinks = document.querySelectorAll('.nav__link');
 
+// Debug: Log if elements are found
+if (!navToggle) console.error('Nav toggle not found. Check .nav__toggle class in HTML.');
+if (!navMenu) console.error('Nav menu not found. Check .nav__menu class in HTML.');
+if (!navClose) console.error('Nav close not found. Check .nav__close class in HTML.');
+
 // Show/Hide Navigation Menu
 if (navToggle && navMenu) {
-    navToggle.addEventListener('click', () => {
-        navMenu.classList.add('show');
-        navMenu.querySelector('.nav__link')?.focus(); // Focus on first link for accessibility
-    });
+    const toggleMenu = () => {
+        navMenu.classList.toggle('show');
+        if (navMenu.classList.contains('show')) {
+            navMenu.querySelector('.nav__link')?. Ascendant$0
+            console.log('Menu opened');
+        } else {
+            console.log('Menu closed');
+        }
+    };
+    navToggle.addEventListener('click', toggleMenu);
+    navToggle.addEventListener('touchstart', toggleMenu, { passive: false });
 }
 
 if (navClose && navMenu) {
-    navClose.addEventListener('click', () => {
+    const closeMenu = () => {
         navMenu.classList.remove('show');
-        navToggle?.focus(); // Return focus to toggle button
-    });
+        navToggle?.focus();
+        console.log('Menu closed via close button');
+    };
+    navClose.addEventListener('click', closeMenu);
+    navClose.addEventListener('touchstart', closeMenu, { passive: false });
 }
 
 // Keyboard support for navigation toggle and close
@@ -90,8 +103,10 @@ if (navToggle) {
     navToggle.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
-            navMenu?.classList.add('show');
-            navMenu?.querySelector('.nav__link')?.focus();
+            navMenu?.classList.toggle('show');
+            if (navMenu?.classList.contains('show')) {
+                navMenu.querySelector('.nav__link')?.focus();
+            }
         }
     });
 }
@@ -152,7 +167,7 @@ const skillBars = document.querySelectorAll('.skill__progress');
 
 function animateSkills() {
     skillBars.forEach(bar => {
-        const width = bar.dataset.width || 0; // Fallback to 0 if data-width is missing
+        const width = bar.dataset.width || 0;
         if (width) {
             bar.style.width = `${width}%`;
         } else {
@@ -161,6 +176,7 @@ function animateSkills() {
     });
 }
 
+// Reset skill bar widths to 0 initially
 skillBars.forEach(bar => {
     bar.style.width = '0';
 });
@@ -172,13 +188,13 @@ if (skillsSection) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 animateSkills();
-                observer.unobserve(skillsSection); // Run animation only once
+                observer.unobserve(skillsSection);
             }
         });
-    }, { threshold: 0.1 }); // Lower threshold for mobile
+    }, { threshold: 0.1 });
     observer.observe(skillsSection);
 
-    // Fallback for immediate visibility on page load
+    // Fallback for immediate visibility
     const rect = skillsSection.getBoundingClientRect();
     if (rect.top >= 0 && rect.top <= window.innerHeight) {
         animateSkills();
@@ -201,18 +217,15 @@ if (contactForm) {
     contactForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        // Get form data
         const formData = new FormData(contactForm);
         const data = Object.fromEntries(formData);
         
         try {
-            // Load EmailJS SDK if not already loaded
             if (typeof emailjs === 'undefined') {
                 await loadEmailJSSDK();
-                emailjs.init('G0iq-bLzqAU94-4zW'); // Your EmailJS Public Key
+                emailjs.init('G0iq-bLzqAU94-4zW'); // Replace with your EmailJS Public Key
             }
             
-            // Send form data via EmailJS
             const response = await emailjs.sendForm('service_85m638d', 'template_i0uv1gm', contactForm);
             console.log('Form submitted successfully:', data, response);
             showNotification('Message Sent Successfully! I will reach u soon 📧🚀');
