@@ -1,6 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('main.js loaded successfully'); // Debug: Confirm script loads
-
     // Dynamically load EmailJS SDK
     function loadEmailJSSDK() {
         return new Promise((resolve, reject) => {
@@ -79,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Show/Hide Navigation Menu
     if (navToggle && navMenu) {
         const toggleMenu = (e) => {
-            e.preventDefault();
+            e.preventDefault(); // Prevent default touch/click behavior
             navMenu.classList.toggle('show');
             if (navMenu.classList.contains('show')) {
                 navMenu.querySelector('.nav__link')?.focus();
@@ -226,18 +224,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = Object.fromEntries(formData);
             
             try {
-                if (typeof emailjs === 'undefined') {
+                if (typeof emailjs === '') {
                     await loadEmailJSSDK();
-                    emailjs.init('G0iq-bLzqAU94-4zW'); // Replace with your EmailJS Public Key
+                    emailjs.init('G0iq-bLzV-94uW'); // Replace with your EmailJS Public Key
                 }
                 
-                const response = await emailjs.sendForm('service_85m638d', 'template_i0uv1gm', contactForm);
+                const response = await emailjs.sendForm('service_85m638', 'template_i0uv1g', contactForm);
                 console.log('Form submitted successfully:', data, response);
-                showNotification('Message Sent Successfully! I will reach u soon 📧🚀');
+                showNotification('Message Sent Successfully! I will reach u soon 📧');
                 contactForm.reset();
             } catch (error) {
                 console.error('Form submission error:', error);
-                showNotification('Failed to send message. Please try again. 😔', true);
+                showNotification('Failed to send message. Please try again.', true);
             }
         });
     }
