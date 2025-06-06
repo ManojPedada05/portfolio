@@ -156,50 +156,34 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('scroll', scrollActive);
 
     // Skills Animation
+    const skillsSection = document.querySelector('.skills-section');
     const skillBars = document.querySelectorAll('.skill__progress');
 
-    function animateSkills() {
-        console.log('Animating skills'); // Debug
-        skillBars.forEach(bar => {
-            const width = bar.dataset.width || 0;
-            if (width) {
-                bar.style.width = `${width}%`;
-                console.log(`Set width ${width}% for`, bar); // Debug
-            } else {
-                console.warn(`Missing data-width for element:`, bar);
-            }
-        });
-    }
-
-    // Reset skill bar widths to 0 initially
-    skillBars.forEach(bar => {
-        bar.style.width = '0';
-    });
-
-    // Intersection Observer for skill bars
-    const skillsSection = document.querySelector('.skills-section');
-    if (skillsSection) {
-        console.log('Skills section found'); // Debug
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                console.log('IntersectionObserver triggered', entry.isIntersecting); // Debug
-                if (entry.isIntersecting) {
-                    animateSkills();
-                    observer.unobserve(skillsSection);
-                }
-            });
-        }, { threshold: 0.1 });
+    if (skillsSection && skillBars.length > 0) {
+        console.log('Skills section and bars found'); // Debug
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        console.log('Skills section in view, animating'); // Debug
+                        skillBars.forEach((bar, index) => {
+                            const width = bar.dataset.width || 0;
+                            if (width) {
+                                bar.style.width = `${width}%`;
+                                bar.style.transitionDelay = `${index * 0.1}s`; // Staggered animation
+                            } else {
+                                console.warn(`Missing data-width for element:`, bar);
+                            }
+                        });
+                        observer.unobserve(skillsSection); // Run animation once
+                    }
+                });
+            },
+            { threshold: 0.2 } // Trigger when 20% of section is visible
+        );
         observer.observe(skillsSection);
-
-        // Fallback for immediate visibility
-        const rect = skillsSection.getBoundingClientRect();
-        if (rect.top >= 0 && rect.top <= window.innerHeight) {
-            console.log('Skills section visible on load, animating'); // Debug
-            animateSkills();
-            observer.unobserve(skillsSection);
-        }
     } else {
-        console.error('Skills section not found');
+        console.error('Skills section or bars not found');
     }
 
     // Image Error Handling
