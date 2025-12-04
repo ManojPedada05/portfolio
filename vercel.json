@@ -1,0 +1,27 @@
+{
+  "routes": [
+    { "src": "/sitemap.xml", "dest": "/sitemap.xml" },
+    { "src": "/robots.txt", "dest": "/robots.txt" },
+
+    // static assets (images, css, js) – let Vercel serve them normally
+    { "src": "/(.*\\.(?:css|js|png|jpg|jpeg|webp|svg|ico))", "dest": "/$1" },
+
+    // catch-all for the app (only after static routes)
+    { "src": "/(.*)", "dest": "/" }
+  ],
+
+  "headers": [
+    {
+      "source": "/sitemap.xml",
+      "headers": [
+        { "key": "Content-Type", "value": "application/xml; charset=utf-8" }
+      ]
+    },
+    {
+      "source": "/robots.txt",
+      "headers": [
+        { "key": "Content-Type", "value": "text/plain; charset=utf-8" }
+      ]
+    }
+  ]
+}
